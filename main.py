@@ -5,7 +5,9 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
-
+@app.route('/')
+def index():
+    return 'gg'
 @app.route('/scrape', methods=['POST'])
 def scrape():
     data = request.json
@@ -43,6 +45,7 @@ def scrape():
         return jsonify({'srcLinks': src_links})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get('PORT', 4000))
+    app.run(host='0.0.0.0', port=port)
