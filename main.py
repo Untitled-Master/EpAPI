@@ -10,11 +10,14 @@ import requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
-
-# Function to scrape data from the website
-def scrape_data_home():
+@app.route('/home', methods=['GET'])
+def get_scraped_data():
     url = 'https://joycinema.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86-%d9%85%d8%aa%d8%b1%d8%ac%d9%85%d8%a9/'  # Replace with the specific URL you want to scrape
     response = requests.get(url)
+
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to retrieve data from the website"}), 500
+
     soup = BeautifulSoup(response.content, 'html.parser')
 
     post_blocks = soup.find_all('div', class_='postBlockOne')
@@ -31,15 +34,9 @@ def scrape_data_home():
             'link': link,
             'image': img
         })
-    
-    return data
 
-# Define the API endpoint
-@app.route('/home', methods=['GET'])
-def homecartoon():
-    data = scrape_data()
     return jsonify(data)
-
+    
 @app.route('/')
 def index():
     return 'gg'
