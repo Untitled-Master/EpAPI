@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create or Join Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .room-info, .join-room-info {
+            margin-top: 20px;
+            display: none;
+        }
+        .room-info p, .join-room-info p {
+            font-size: 18px;
+        }
+        input {
+            padding: 8px;
+            margin: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Create or Join a Room</h1>
+
+    <!-- Create Room Button -->
+    <button class="btn" id="createRoomBtn">Create Room</button>
+
+    <div class="room-info" id="roomInfo">
+        <p><strong>Room Code:</strong> <span id="roomCode"></span></p>
+        <p><strong>Player 1:</strong> <span id="player1"></span></p>
+        <p><strong>Player 2:</strong> <span id="player2"></span></p>
+    </div>
+
+    <hr />
+
+    <!-- Join Room Section -->
+    <h1>Join a Room</h1>
+    <input type="text" id="roomCodeInput" placeholder="Enter Room Code" />
+    <button class="btn" id="joinRoomBtn">Join Room</button>
+
+    <div class="join-room-info" id="joinRoomInfo">
+        <p><strong>Room Code:</strong> <span id="joinRoomCode"></span></p>
+        <p><strong>Player 1:</strong> <span id="joinPlayer1"></span></p>
+        <p><strong>Player 2:</strong> <span id="joinPlayer2"></span></p>
+    </div>
+</div>
+
+<script>
+    // Function to create a room and save it in local storage
+    document.getElementById('createRoomBtn').addEventListener('click', function () {
+        fetch('https://epapi.onrender.com/room-code')
+            .then(response => response.json())
+            .then(data => {
+                // Save room data to local storage
+                localStorage.setItem('room_code', data.room_code);
+                localStorage.setItem('player1', data.player1);
+                localStorage.setItem('player2', data.player2);
+
+                // Display the room info
+                document.getElementById('roomCode').textContent = data.room_code;
+                document.getElementById('player1').textContent = data.player1;
+                document.getElementById('player2').textContent = data.player2;
+                document.getElementById('roomInfo').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Function to join a room based on the room code entered
+    document.getElementById('joinRoomBtn').addEventListener('click', function () {
+        const roomCode = document.getElementById('roomCodeInput').value;
+        
+        if (roomCode.trim() === '') {
+            alert('Please enter a valid room code');
+            return;
+        }
+
+        // Fetch the room data from the server using the entered room code
+        fetch(`/room/${roomCode}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display the joined room info
+                document.getElementById('joinRoomCode').textContent = roomCode;
+                document.getElementById('joinPlayer1').textContent = data.player1;
+                document.getElementById('joinPlayer2').textContent = data.player2;
+                document.getElementById('joinRoomInfo').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Room not found. Please enter a valid room code.');
+            });
+    });
+</script>
+
+</body>
+</html>
