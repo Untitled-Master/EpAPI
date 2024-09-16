@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .room-info {
+            margin-top: 20px;
+            display: none;
+        }
+        .room-info p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Create a Room</h1>
+    <button class="btn" id="createRoomBtn">Create Room</button>
+
+    <div class="room-info" id="roomInfo">
+        <p><strong>Room Code:</strong> <span id="roomCode"></span></p>
+        <p><strong>Player 1:</strong> <span id="player1"></span></p>
+        <p><strong>Player 2:</strong> <span id="player2"></span></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('createRoomBtn').addEventListener('click', function () {
+        // Call the Flask API to create a room
+        fetch('/room-code')
+            .then(response => response.json())
+            .then(data => {
+                // Save room data to local storage
+                localStorage.setItem('room_code', data.room_code);
+                localStorage.setItem('player1', data.player1);
+                localStorage.setItem('player2', data.player2);
+
+                // Display the room info
+                document.getElementById('roomCode').textContent = data.room_code;
+                document.getElementById('player1').textContent = data.player1;
+                document.getElementById('player2').textContent = data.player2;
+                document.getElementById('roomInfo').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+
+</body>
+</html>
