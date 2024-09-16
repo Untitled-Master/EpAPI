@@ -62,7 +62,7 @@
 <script>
     document.getElementById('createRoomBtn').addEventListener('click', function () {
         // Call the Flask API to create a room
-        fetch('/room-code')
+        fetch('https://epapi.onrender.com/room')
             .then(response => response.json())
             .then(data => {
                 // Save room data to local storage
