@@ -39,6 +39,20 @@ def get_room_code_and_players2():
     
     # Return the room data in JSON format
     return jsonify(room_data)
+@app.route('/room/<room_code>', methods=['GET'])
+def get_room_by_code(room_code):
+    # Get the reference to the room in the Firebase database
+    ref = db.reference(f'/rooms/{room_code}')
+    
+    # Fetch the room data from Firebase
+    room_data = ref.get()
+    
+    if room_data:
+        # Return the room data in JSON format
+        return jsonify(room_data)
+    else:
+        # If the room doesn't exist, return a 404 error
+        return jsonify({'error': 'Room not found'}), 404
 
 @app.route('/room-code', methods=['GET'])
 def get_room_code_and_players():
