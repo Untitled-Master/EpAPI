@@ -14,7 +14,7 @@ CORS(app)  # This will enable CORS for all routes
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate("crss-58a32-firebase-adminsdk-xme9f-307b31b892.json")
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://crss-58a32.firebaseio.com/'  # Replace with your Firebase DB URL
+    'databaseURL': 'https://crss-58a32-default-rtdb.firebaseio.com'  # Replace with your Firebase DB URL
 })
 
 @app.route('/room', methods=['GET'])
