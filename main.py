@@ -7,10 +7,23 @@ import string
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+
 @app.route('/room-code', methods=['GET'])
-def get_random_code():
+def get_room_code_and_players():
+    # Generate a random 4-letter room code
     random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
-    return jsonify({'random_code': random_code})
+    
+    # Generate two random numbers for players
+    player1 = random.randint(1, 14)
+    player2 = random.randint(1, 14)
+
+    # Return the room code and player numbers in JSON format
+    return jsonify({
+        'room_code': random_code,
+        'player1': player1,
+        'player2': player2
+    })
+
 @app.route('/random', methods=['GET'])
 def get_random_number():
     random_number = random.randint(1, 14)
