@@ -2,3 +2,4 @@ Flask
 Flask-CORS
 requests
 beautifulsoup4
+firebase-admin
