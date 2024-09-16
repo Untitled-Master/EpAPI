@@ -18,7 +18,7 @@ firebase_admin.initialize_app(cred, {
 })
 
 @app.route('/room', methods=['GET'])
-def get_room_code_and_players():
+def get_room_code_and_players2():
     # Generate a random 4-letter room code
     random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
     
