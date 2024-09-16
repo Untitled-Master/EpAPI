@@ -3,9 +3,14 @@ from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 import random
+import string
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+@app.route('/room-code', methods=['GET'])
+def get_random_code():
+    random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
+    return jsonify({'random_code': random_code})
 @app.route('/random', methods=['GET'])
 def get_random_number():
     random_number = random.randint(1, 14)
