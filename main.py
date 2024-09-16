@@ -4,9 +4,41 @@ import requests
 from bs4 import BeautifulSoup
 import random
 import string
+import firebase_admin
+from firebase_admin import credentials, db
+
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate("crss-58a32-firebase-adminsdk-xme9f-307b31b892.json")
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://crss-58a32.firebaseio.com/'  # Replace with your Firebase DB URL
+})
+
+@app.route('/room', methods=['GET'])
+def get_room_code_and_players():
+    # Generate a random 4-letter room code
+    random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
+    
+    # Generate two random numbers for players
+    player1 = random.randint(1, 14)
+    player2 = random.randint(1, 14)
+
+    # Structure the room data
+    room_data = {
+        'room_code': random_code,
+        'player1': player1,
+        'player2': player2
+    }
+    
+    # Save the room data to Firebase Realtime Database
+    ref = db.reference(f'/rooms/{random_code}')  # Save each room under its unique room code
+    ref.set(room_data)
+    
+    # Return the room data in JSON format
+    return jsonify(room_data)
 
 @app.route('/room-code', methods=['GET'])
 def get_room_code_and_players():
