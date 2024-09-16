@@ -5,7 +5,10 @@ from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
-
+@app.route('/random', methods=['GET'])
+def get_random_number():
+    random_number = random.randint(1, 14)
+    return jsonify({'random_number': random_number})
 @app.route('/home', methods=['GET'])
 def get_scraped_data():
     url = 'https://joycinema.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86-%d9%85%d8%aa%d8%b1%d8%ac%d9%85%d8%a9/'  # Replace with the specific URL you want to scrape
