@@ -105,11 +105,14 @@
         const randomCode = Math.random().toString(36).substring(2, 6).toUpperCase();  // Generate a random 4-letter room code
         const player1 = Math.floor(Math.random() * 14) + 1;
         const player2 = Math.floor(Math.random() * 14) + 1;
+        const state = false; 
 
         // Save room data in Firebase
         db.ref('rooms/' + randomCode).set({
+            room: randomCode,
             player1: player1,
-            player2: player2
+            player2: player2,
+            state: state
         });
 
         // Save room data to local storage
