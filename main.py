@@ -102,7 +102,7 @@ def get_scraped_data():
     return jsonify(data)
     
 @app.route('/mv', methods=['GET'])
-def get_scraped_data():
+def get_scraped_datamv():
     url = 'https://joycinema.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/'  # Replace with the specific URL you want to scrape
     response = requests.get(url)
 
