@@ -169,6 +169,48 @@ def scrape():
         return jsonify({'srcLinks': src_links})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+# Define the route for the API
+@app.route('/search', methods=['GET'])
+def search_movies():
+    query = request.args.get('query', 'House')  # Get the search query from URL parameter, default to 'House'
+    url = f'https://joycinema.store/?s={query}'
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return jsonify({'error': 'Could not fetch the page'}), 500
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    post_blocks = soup.find_all('div', class_='postBlockOne')
+
+    data = []
+    for post in post_blocks:
+        title = post.find('h3', class_='title')
+        if title:
+            title = title.text
+        else:
+            continue  # Skip this post if there's no title
+
+        # Extract the anchor tag and then get the href attribute for the link
+        link_tag = post.find('a', class_='series')
+        if link_tag:
+            link = link_tag.get('href')
+        else:
+            link = 'No link available'  # Handle missing link case
+
+        # Extract the image URL
+        imgdiv = post.find('div', class_='poster')
+        if imgdiv:
+            img = imgdiv.find('img')['data-img']
+        else:
+            img = 'No image available'  # Handle missing image case
+
+        data.append({
+            'title': title,
+            'link': link,
+            'image': img
+        })
+
+    return jsonify(data)
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 4000))
