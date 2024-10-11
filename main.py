@@ -74,6 +74,32 @@ def get_room_code_and_players():
 def get_random_number():
     random_number = random.randint(1, 14)
     return jsonify({'random_number': random_number})
+@app.route('/home2', methods=['GET'])
+def get_scraped_data02():
+    url = 'https://joyman.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/'  # Replace with the specific URL you want to scrape
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to retrieve data from the website"}), 500
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    post_blocks = soup.find_all('div', class_='postBlockOne')
+
+    data = []
+    for post in post_blocks:
+        title = post.find('h3', class_='title').text
+        link = post.find('a', class_='series')['href']
+        imgdiv = post.find('div', class_='poster')
+        img = imgdiv.find('img')['data-img']
+
+        data.append({
+            'title': title,
+            'link': link,
+            'image': img
+        })
+
+    return jsonify(data)
 @app.route('/home', methods=['GET'])
 def get_scraped_data():
     url = 'https://joycinema.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d9%83%d8%b1%d8%aa%d9%88%d9%86-%d9%85%d8%aa%d8%b1%d8%ac%d9%85%d8%a9/'  # Replace with the specific URL you want to scrape
