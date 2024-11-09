@@ -17,63 +17,6 @@ firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://crss-58a32-default-rtdb.firebaseio.com'  # Replace with your Firebase DB URL
 })
 
-@app.route('/room', methods=['GET'])
-def get_room_code_and_players2():
-    # Generate a random 4-letter room code
-    random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
-    
-    # Generate two random numbers for players
-    player1 = random.randint(1, 14)
-    player2 = random.randint(1, 14)
-
-    # Structure the room data
-    room_data = {
-        'room_code': random_code,
-        'player1': player1,
-        'player2': player2
-    }
-    
-    # Save the room data to Firebase Realtime Database
-    ref = db.reference(f'/rooms/{random_code}')  # Save each room under its unique room code
-    ref.set(room_data)
-    
-    # Return the room data in JSON format
-    return jsonify(room_data)
-@app.route('/room/<room_code>', methods=['GET'])
-def get_room_by_code(room_code):
-    # Get the reference to the room in the Firebase database
-    ref = db.reference(f'/rooms/{room_code}')
-    
-    # Fetch the room data from Firebase
-    room_data = ref.get()
-    
-    if room_data:
-        # Return the room data in JSON format
-        return jsonify(room_data)
-    else:
-        # If the room doesn't exist, return a 404 error
-        return jsonify({'error': 'Room not found'}), 404
-
-@app.route('/room-code', methods=['GET'])
-def get_room_code_and_players():
-    # Generate a random 4-letter room code
-    random_code = ''.join(random.choices(string.ascii_uppercase, k=4))
-    
-    # Generate two random numbers for players
-    player1 = random.randint(1, 14)
-    player2 = random.randint(1, 14)
-
-    # Return the room code and player numbers in JSON format
-    return jsonify({
-        'room_code': random_code,
-        'player1': player1,
-        'player2': player2
-    })
-
-@app.route('/random', methods=['GET'])
-def get_random_number():
-    random_number = random.randint(1, 14)
-    return jsonify({'random_number': random_number})
 @app.route('/home2', methods=['GET'])
 def get_scraped_data02():
     url = 'https://joyman.store/category/%d9%85%d8%b3%d9%84%d8%b3%d9%84%d8%a7%d8%aa-%d8%a7%d8%ac%d9%86%d8%a8%d9%8a/'  # Replace with the specific URL you want to scrape
